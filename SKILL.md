@@ -53,7 +53,7 @@ description: Use when 用户发来剑五（剑桥五级 KET / PET / FCE）作文
 输出格式：
 
 ```
-【评分】PET Part 2 看图写故事（满分 20）
+【评分】PET Part 2 story（给定首句续写，满分 20）
 - Content（内容）: x/5 —— 一句话给分依据
 - Communicative Achievement（交际达成）: x/5 —— …
 - Organisation（结构）: x/5 —— …
@@ -100,7 +100,7 @@ KET 只有三项（Content / Organisation / Language），总分 /15。
 
 ```
 【作文反馈】
-<学生姓名><级别题型，如 PET 看图写故事> <M月D日，不带年份>
+<学生姓名><级别题型，如 PET article / PET story / KET 看图写故事> <M月D日，不带年份>
 
 【得分与评语】
 <分数>/<满分>（C x · CA x · O x · L x，档位说明四选一：Grade X 通过 / Grade X 边缘，未稳过 / 未过字数线：实际词数，不足 X 词，判为不过 / 未达到本级要求；KET 写 C x · O x · L x）

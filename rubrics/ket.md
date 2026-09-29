@@ -11,7 +11,7 @@
 
 字数不足会直接损失 Content 分数。批改时必报字数。
 
-**字数硬线**：邮件不足 25 词、故事不足 35 词，**直接判不过**。分数照常评出供参考，但等级一栏必须写「未过字数线，判为不过」，不写 Grade 档位。词数过线后才进入正常评分和 Grade 档位换算。
+**字数硬线（自定规则，非剑桥官方）**：邮件不足 25 词、故事不足 35 词，**直接判不过**。分数照常评出供参考，但等级一栏必须写「未过字数线，判为不过」，不写 Grade 档位；报告中须注明这是本次练习的自定要求，不是剑桥官方判据。词数过线后才进入正常评分和 Grade 档位换算。
 
 ## 评分维度（每项 0–5 分）
 
@@ -27,15 +27,23 @@ KET 写作每篇按**三项**评分（比 PET/FCE 少一项 Communicative Achiev
 
 ### 5 分档的典型特征（用于对标给分）
 
-- **Content**: 全部内容点覆盖，内容 relevant 且对读者有交代。故事题三幅图都写到、每幅图有细节，5 分就到手；「写全三个点」是 KET 最好拿的分
-- **Organisation**: 行文连贯。注意评分口径比想象中宽：连接词（and/but/then/because）、邮件格式（称呼 + 结尾套语，如 Hello Chris / Goodbye）、时间标志词（next Saturday, first, then）、代词使用（第二次提到 Tom and Lucy 用 them 代替）**都算 Organisation**
-- **Language**: **允许有少量错误**，标准是 errors do not impede communication（不影响理解），不是零错误才给 5 分。判断锚点：「She is eating a sandwich.」是 5 分控制力；「She eating a sandwich.」是 3 分（some degree of control，能用、对方能懂、但不全对）
+- **Content**: 全部内容点覆盖，读者**完全被告知**（fully informed）——不只是「三幅图都提到了」，而是每幅图的信息都交代清楚，读者不需要脑补。3 分档是「总体被告知」（on the whole informed），允许轻微遗漏；5 分档是「完全被告知」，不允许遗漏。**不是数够要点就给 5 分，是看读者是不是真的懂了**
+- **Organisation**: 行文连贯且衔接手段到位（connected and coherent, using basic linking words and a limited number of cohesive devices）。注意评分口径比想象中宽：连接词、邮件格式（称呼+结尾套语）、时间标志词、代词使用**都算 Organisation**；但**有称呼结尾不自动保证 5 分**——格式是必要条件之一，还要连贯和衔接证据
+- **Language**: **允许有明显错误，只要意思可判明**（errors may be noticeable but meaning can still be determined）——不是「少量错误」也不是「零错误」。判断锚点：「She is eating a sandwich.」是 5 分控制力；「She eating a sandwich.」是 3 分；**单个句子不能决定整篇档位**，看全文整体控制水平
 
 ### 3 分档的典型特征
 
 - **Content**: 覆盖大部分内容点，允许 minor irrelevances / omissions（轻微跑题或个别遗漏），但整体读者能看懂全部信息
 - **Organisation**: 衔接靠 basic high-frequency linking words——注意这指的是 and/but 这类**最高频**连接词，不是高级连接词；有时间标志词和简单代词也算达标
 - **Language**: 使用简单语法结构，some degree of control（能用、对方能懂、但不全对），错误偶尔影响理解
+
+### 0/2/4 分档的判定规则
+
+官方量表只有 1/3/5 的完整描述，0/2/4 用插值规则判定：
+
+- **2 分**：介于 1 分和 3 分之间——比「大量错误/不连贯」好，但达不到「总体被告知+基本连贯」的水平
+- **4 分**：介于 3 分和 5 分之间——比「总体被告知」好，但达不到「完全被告知+充分衔接」的水平
+- **0 分**：Content 完全偏题或无法辨认；Organisation 完全不连贯；Language 错误到无法理解
 
 ### 1–2 分档的典型特征
 
