@@ -86,6 +86,25 @@ def check_feedback(text):
         line = score.group(1)
         if not re.search(r"C\s*\d", line):
             errs.append("分数行缺少分项小分（C x · CA x · O x · L x）")
+        else:
+            total_m = re.search(r"(\d+)\s*/\s*(\d+)", line)
+            if total_m:
+                total = int(total_m.group(1))
+                subscores = re.findall(r"\b(?:C|CA|O|L)\s*(\d+)\b", line)
+                subs = [int(s) for s in subscores]
+                is_ket = "KET" in text[:300]  # 前两行内出现 KET 按三项校验
+                expected_dims = 3 if is_ket else 4
+                expected_max = 15 if is_ket else 20
+                if len(subs) != expected_dims:
+                    errs.append(f"分项小分应为 {expected_dims} 项（{'KET' if is_ket else 'PET/FCE'}），实际 {len(subs)} 项：{subs}")
+                else:
+                    for i, v in enumerate(subs):
+                        if not 0 <= v <= 5:
+                            errs.append(f"第 {i+1} 个小分 {v} 超出 0–5 范围")
+                    if sum(subs) != total:
+                        errs.append(f"总分 {total} ≠ 小分之和 {sum(subs)}（{subs}）")
+                    if int(total_m.group(2)) != expected_max:
+                        errs.append(f"满分应为 {expected_max}，实际 /{total_m.group(2)}")
 
     if re.search(r"约\s*\d+\s*词", text):
         errs.append("出现「约 N 词」——词数必须实际计数，不许估算（红队问题 #3）")
