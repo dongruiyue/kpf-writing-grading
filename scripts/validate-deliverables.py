@@ -84,27 +84,45 @@ def check_feedback(text):
         errs.append("分数行缺少 x/满分 格式")
     else:
         line = score.group(1)
-        if not re.search(r"C\s*\d", line):
-            errs.append("分数行缺少分项小分（C x · CA x · O x · L x）")
+        total_m = re.search(r"(\d+)\s*/\s*(\d+)", line)
+        if not total_m:
+            errs.append("分数行缺少 x/满分 格式")
         else:
-            total_m = re.search(r"(\d+)\s*/\s*(\d+)", line)
-            if total_m:
-                total = int(total_m.group(1))
-                subscores = re.findall(r"\b(?:C|CA|O|L)\s*(\d+)\b", line)
-                subs = [int(s) for s in subscores]
-                is_ket = "KET" in text[:300]  # 前两行内出现 KET 按三项校验
-                expected_dims = 3 if is_ket else 4
-                expected_max = 15 if is_ket else 20
-                if len(subs) != expected_dims:
-                    errs.append(f"分项小分应为 {expected_dims} 项（{'KET' if is_ket else 'PET/FCE'}），实际 {len(subs)} 项：{subs}")
-                else:
-                    for i, v in enumerate(subs):
-                        if not 0 <= v <= 5:
-                            errs.append(f"第 {i+1} 个小分 {v} 超出 0–5 范围")
+            total = int(total_m.group(1))
+            is_ket = "KET" in text[:300]  # 前两行内出现 KET 按三项校验
+            expected_names = ["C", "O", "L"] if is_ket else ["C", "CA", "O", "L"]
+            expected_max = 15 if is_ket else 20
+
+            # 完整解析「维度名＋数值」对，先截小数（发现小数单独报错，不静默截断）
+            if re.search(r"[CLO]A?\s*\d+\.\d+", line):
+                errs.append("分数行出现小数小分——评分规则只接受整数（教研口径：写作评分无 0.5）")
+            pairs = re.findall(r"\b(C|CA|O|L)\s*(\d+)\b", line)
+            names = [n for n, _ in pairs]
+            subs = [int(v) for _, v in pairs]
+
+            if not pairs:
+                errs.append("分数行缺少分项小分（C x · CA x · O x · L x）")
+            else:
+                if sorted(names) != sorted(expected_names):
+                    missing = [n for n in expected_names if n not in names]
+                    dup = [n for n in set(names) if names.count(n) > 1]
+                    extra = [n for n in names if n not in expected_names]
+                    if missing:
+                        errs.append(f"缺少维度小分：{missing}（应为 {expected_names}）")
+                    if dup:
+                        errs.append(f"维度小分重复：{dup}（应为 {expected_names}）")
+                    if extra:
+                        errs.append(f"多出维度小分：{extra}（应为 {expected_names}）")
+                elif names != expected_names:
+                    errs.append(f"小分顺序错误：{names}（应为 {expected_names}）")
+                if len(pairs) == len(expected_names):
+                    for n, v in pairs:
+                        if not 0 <= int(v) <= 5:
+                            errs.append(f"{n} 小分 {v} 超出 0–5 范围")
                     if sum(subs) != total:
-                        errs.append(f"总分 {total} ≠ 小分之和 {sum(subs)}（{subs}）")
-                    if int(total_m.group(2)) != expected_max:
-                        errs.append(f"满分应为 {expected_max}，实际 /{total_m.group(2)}")
+                        errs.append(f"总分 {total} ≠ 小分之和 {sum(subs)}（{pairs}）")
+                if int(total_m.group(2)) != expected_max:
+                    errs.append(f"满分应为 {expected_max}，实际 /{total_m.group(2)}")
 
     if re.search(r"约\s*\d+\s*词", text):
         errs.append("出现「约 N 词」——词数必须实际计数，不许估算（红队问题 #3）")
@@ -157,5 +175,55 @@ def main():
     print("全部通过")
 
 
+# ── 自检：已知反例回归（GPT6-astra 两轮审查实测构造）───────────
+
+_FEEDBACK_BASE = """【作文反馈】
+测试生 PET article 3月15日
+
+【得分与评语】
+{score_line}
+评语。
+
+【写得好的地方】
+1. a
+2. b
+
+【需要修改的地方】
+1. x。重要性：🌟🌟🌟
+2. y。重要性：🌟🌟
+3. z。重要性：🌟
+
+【下一步练习】
+练习内容"""
+
+_SELFTEST = [
+    # (名称, 分数行, 是否应拦下)
+    ("astra 反例 99/20 超范围", "99/20（C 9 · CA 5 · O 5 · L 5，Grade A 通过）", True),
+    ("astra 反例 小分和≠总分", "14/20（C 5 · CA 5 · O 5 · L 5，Grade A 通过）", True),
+    ("astra 反例 重复C缺CA", "16/20（C 4 · C 4 · O 4 · L 4，Grade B 通过）", True),
+    ("astra 反例 小数 4.5", "16/20（C 4.5 · CA 4.5 · O 4 · L 4，Grade B 通过）", True),
+    ("astra 反例 顺序错 LOCA", "16/20（L 4 · O 4 · CA 4 · C 4，Grade B 通过）", True),
+    ("正例 PET 16/20 Grade B", "16/20（C 4 · CA 4 · O 4 · L 4，Grade B 水平）", False),
+    ("正例 PET 10/20 未过字数线", "10/20（C 2 · CA 3 · O 2 · L 3，未过字数线：51 词，不足 90 词，判为不过）", False),
+]
+
+
+def selftest():
+    failed = 0
+    for name, line, expect_err in _SELFTEST:
+        errs = check_feedback(_FEEDBACK_BASE.replace("{score_line}", line))
+        score_errs = [e for e in errs if any(k in e for k in ("分", "维度", "范围", "顺序", "小数"))]
+        ok = bool(score_errs) == expect_err
+        if not ok:
+            failed += 1
+            print(f"  ✗ {name}: 应拦={expect_err} 实拦={bool(score_errs)}")
+        else:
+            print(f"  ✓ {name}")
+    print("自检全部通过" if failed == 0 else f"自检 {failed} 项失败")
+    sys.exit(1 if failed else 0)
+
+
 if __name__ == "__main__":
+    if sys.argv[1:] == ["--selftest"]:
+        selftest()
     main()
