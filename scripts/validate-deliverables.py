@@ -60,8 +60,8 @@ def _band_ranges(is_ket):
     return {"A": (17, 20), "B": (14, 16), "C": (11, 13), "edge": (8, 10), "fail": (0, 7)}
 
 
-def _check_score_parts(total, max_score, pairs, band_text, is_ket, errs):
-    """反馈文本和 HTML 报告共用的分数校验。pairs = [(维度名, 数值), ...]"""
+def _check_score_parts(total, max_score, pairs, band_text, is_ket, errs, raw_subs=""):
+    """反馈文本和 HTML 报告共用的分数校验。pairs = [(维度名, 数值), ...]，raw_subs 为小分原始文本（用于查小数）"""
     expected_names = ["C", "O", "L"] if is_ket else ["C", "CA", "O", "L"]
     expected_max = 15 if is_ket else 20
 
@@ -70,6 +70,10 @@ def _check_score_parts(total, max_score, pairs, band_text, is_ket, errs):
         return
     if max_score != expected_max:
         errs.append(f"满分应为 {expected_max}，实际 /{max_score}")
+
+    # 小数拦截放在共享层：raw_subs 是解析前的原始小分文本，两位解析都过这里
+    if raw_subs and re.search(r"\d+\.\d+", raw_subs):
+        errs.append(f"小分出现小数（{raw_subs.strip()}）——评分规则只接受整数（教研口径：写作评分无 0.5）")
 
     names = [n for n, _ in pairs]
     subs = [int(v) for _, v in pairs]
@@ -112,6 +116,8 @@ def _check_score_parts(total, max_score, pairs, band_text, is_ket, errs):
         return
     g = m.group(1)
     if "边缘" in band_text or "未稳过" in band_text:
+        if g != "C":
+            errs.append(f"边缘档只能写 Grade C 边缘（规则：PET/FCE 8–10、KET 6–7 是 C 下沿，不存在 Grade {g} 边缘）")
         lo, hi = r["edge"]
         label = f"Grade {g} 边缘档"
     else:
@@ -155,12 +161,9 @@ def check_feedback(text):
         if not total_m:
             errs.append("分数行缺少 x/满分 格式")
         else:
-            # 发现小数单独报错，不静默截断
-            if re.search(r"[CLO]A?\s*\d+\.\d+", line):
-                errs.append("分数行出现小数小分——评分规则只接受整数（教研口径：写作评分无 0.5）")
             is_ket = "KET" in text[:300]
             pairs = re.findall(r"\b(C|CA|O|L)\s*(\d+)\b", line)
-            _check_score_parts(int(total_m.group(1)), int(total_m.group(2)), pairs, line, is_ket, errs)
+            _check_score_parts(int(total_m.group(1)), int(total_m.group(2)), pairs, line, is_ket, errs, raw_subs=line)
 
     if re.search(r"约\s*\d+\s*词", text):
         errs.append("出现「约 N 词」——词数必须实际计数，不许估算（红队问题 #3）")
@@ -193,8 +196,31 @@ def check_html(text):
         is_ket = "KET" in text[:2000]
         pairs = re.findall(r"\b(C|CA|O|L)\s*(\d+)\b", subs_m.group(1))
         _check_score_parts(int(num_m.group(1)), int(num_m.group(2)), pairs,
-                           band_m.group(1) if band_m else "", is_ket, errs)
+                           band_m.group(1) if band_m else "", is_ket, errs,
+                           raw_subs=subs_m.group(1))
     return errs
+
+
+def _extract_score_info(text, is_html):
+    """从文本反馈或 HTML 报告中提取 (total, subs_tuple, band_text)，用于跨文件一致性比对。"""
+    if is_html:
+        num_m = re.search(r'<div class="num">(-?\d+)<small>\s*/\s*(-?\d+)</small></div>', text)
+        subs_m = re.search(r'<div class="subs">([^<]+)</div>', text)
+        band_m = re.search(r'<div class="band(?:\s+fail)?">([^<]+)</div>', text)
+        if not (num_m and subs_m):
+            return None
+        pairs = re.findall(r"\b(C|CA|O|L)\s*(\d+)\b", subs_m.group(1))
+        return (int(num_m.group(1)), tuple((n, int(v)) for n, v in pairs),
+                band_m.group(1) if band_m else "")
+    score = re.search(r"【得分与评语】\s*\n?([^\n]*\d+\s*/\s*\d+[^\n]*)", text)
+    if not score:
+        return None
+    line = score.group(1)
+    total_m = re.search(r"(-?\d+)\s*/\s*(-?\d+)", line)
+    pairs = re.findall(r"\b(C|CA|O|L)\s*(\d+)\b", line)
+    if not (total_m and pairs):
+        return None
+    return (int(total_m.group(1)), tuple((n, int(v)) for n, v in pairs), line)
 
 
 def main():
@@ -203,6 +229,7 @@ def main():
         print(__doc__)
         sys.exit(1)
     all_errs = []
+    score_infos = []  # (文件名, total, subs, band_text) 用于跨文件一致性
     for a in args:
         p = Path(a)
         if not p.exists():
@@ -219,8 +246,24 @@ def main():
                         errs.append(f"报告残留样板数据「{stale}」——照抄模板后漏改，必须替换为本次内容")
         else:
             errs = check_feedback(text)
+        info = _extract_score_info(text, p.suffix.lower() in (".html", ".htm"))
+        if info:
+            score_infos.append((p.name,) + info)
         for e in errs:
             all_errs.append(f"[{p.name}] {e}")
+
+    # 跨文件一致性：同一次批改的两个交付物，总分/小分/结论必须一致
+    if len(score_infos) >= 2:
+        base_name, base_total, base_subs, base_band = score_infos[0]
+        for name, total, subs, band in score_infos[1:]:
+            if total != base_total:
+                all_errs.append(f"[跨文件] 总分不一致：{base_name}={base_total} vs {name}={total}")
+            if subs != base_subs:
+                all_errs.append(f"[跨文件] 小分不一致：{base_name}={base_subs} vs {name}={subs}")
+            base_fail = "判为不过" in base_band or "未过字数线" in base_band
+            this_fail = "判为不过" in band or "未过字数线" in band
+            if base_fail != this_fail:
+                all_errs.append(f"[跨文件] 结论不一致：{base_name}{'判为不过' if base_fail else '正常给档'} vs {name}{'判为不过' if this_fail else '正常给档'}")
     if all_errs:
         print("未通过：")
         for e in all_errs:
@@ -261,6 +304,7 @@ _SELFTEST = [
     ("astra 三审反例 4/20 标 Grade A", "4/20（C 1 · CA 1 · O 1 · L 1，Grade A 通过）", True),
     ("astra 三审反例 16/20 标边缘", "16/20（C 4 · CA 4 · O 4 · L 4，Grade C 边缘，未稳过）", True),
     ("未过线却标 Grade 档位", "10/20（C 2 · CA 3 · O 2 · L 3，Grade C 边缘，未稳过，未过字数线：51 词）", True),
+    ("astra 四审反例 Grade A 边缘", "10/20（C 2 · CA 3 · O 3 · L 2，Grade A 边缘，未稳过）", True),
     ("正例 PET 16/20 Grade B", "16/20（C 4 · CA 4 · O 4 · L 4，Grade B 水平）", False),
     ("正例 PET 10/20 边缘", "10/20（C 2 · CA 3 · O 3 · L 2，Grade C 边缘，未稳过）", False),
     ("正例 PET 11/20 未过字数线", "11/20（C 2 · CA 3 · O 3 · L 3，未过字数线：52 词，不足 90 词，判为不过）", False),
@@ -271,7 +315,7 @@ def selftest():
     failed = 0
     for name, line, expect_err in _SELFTEST:
         errs = check_feedback(_FEEDBACK_BASE.replace("{score_line}", line))
-        score_errs = [e for e in errs if any(k in e for k in ("分", "维度", "范围", "顺序", "小数", "档位"))]
+        score_errs = [e for e in errs if any(k in e for k in ("分", "维度", "范围", "顺序", "小数", "档位", "边缘"))]
         ok = bool(score_errs) == expect_err
         if not ok:
             failed += 1
@@ -289,6 +333,11 @@ def selftest():
         bad = html.replace('class="num">11<', 'class="num">99<')
         ok = bool(check_html(bad))
         print(f"  {'✓' if ok else '✗'} HTML 反例 99/20")
+        failed += 0 if ok else 1
+        # HTML 小数小分（astra 四审反例）
+        bad2 = html.replace('C 2 · CA 3 · O 3 · L 3', 'C 2.5 · CA 3.5 · O 3 · L 3')
+        ok = bool([e for e in check_html(bad2) if "小数" in e])
+        print(f"  {'✓' if ok else '✗'} HTML 反例 小数小分")
         failed += 0 if ok else 1
     print("自检全部通过" if failed == 0 else f"自检 {failed} 项失败")
     sys.exit(1 if failed else 0)
