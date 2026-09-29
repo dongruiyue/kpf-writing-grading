@@ -27,7 +27,7 @@ PET 写作按**四项**评分：
 ### 5 分档的典型特征
 
 - **Content**: 全部要点覆盖且展开充分——「充分」的判断依据是官方描述（每个要点都有实质回应，读者完全被告知），例子是展开的一种方式而非唯一方式；不强制要求举例，有没有例子看题目要求
-- **Communicative Achievement**: 语域和文体从头到尾贴合题目设定的读者；conventions 到位（邮件有称呼结尾、article 像要刊登的文章）；观点清晰、能吸引读者读完。注意：故事靠猎奇情节、生硬反转吸引读者不算数，情节易懂前提下的流畅有趣才算
+- **Communicative Achievement**: 语域和文体从头到尾贴合题目设定的读者；conventions 到位（邮件有称呼结尾、**article 有标题和主题引入**——官方 checklist 把 title 列为 article 的组织特征之一）；观点清晰、能吸引读者读完。注意：故事靠猎奇情节、生硬反转吸引读者不算数，情节易懂前提下的流畅有趣才算
 - **Organisation**: 整体连贯，**a variety of linking words + cohesive devices**。cohesive devices 具体包括：人称代词（he/she/they）、不定代词（some/any/nothing）、指示代词（this/the last one）、关系代词（which is why）等；分段清晰（邮件每个要点一段）
 - **Language**: 准确使用大量日常词汇（如写 picnic 给到 blanket/snacks 而不是只写 fruits/juice）且恰当使用；在此基础上**尝试 less common lexis（不常见词汇），用得不完全准确也符合 5 分档**（inappropriate use 被允许，但前提是日常词汇的基本盘是对的）；使用简单句加部分复杂结构（定语从句、复合句、条件/虚拟语气）；**允许少量错误**，标准是不影响理解
 
@@ -55,6 +55,21 @@ PET 写作按**四项**评分：
 - **Organisation**: 无段落意识，句子堆砌，不连贯
 - **Language**: 错误频繁、多处阻碍理解，词汇量不足以完成基本表达
 
+## 官方样文锚点（B1 Preliminary 教师指南样卷）
+
+以下是从官方 handbook 样文 + 考官评语中提取的校准锚点，**对照着这些锚点给分，比抽象 band descriptor 更稳**：
+
+| 锚点 | 分项得分 | 关键判据 |
+|---|---|---|
+| Email 全答四要点 + 无称呼 | C5 CA3 O3 L3 | 内容全但缺称呼结尾，CA 压到 3 |
+| Email 全答 + 有称呼 + 行文自然 | C5 CA5 O4 L4 | because 过度依赖 → O 压到 4 不上 5 |
+| Email 错误多到影响理解 | C5 CA2 O2 L1 | 内容照样 5 分，但 CA/O/L 全崩 |
+| Article 无标准开头句 | CA 3 | 主题大致引入就算 3，不是 0 |
+| Article 漏答一问 | C 3 | 漏一个完整问题 = C 3，不是 C 2 也不是 0 |
+| Story 人称切换混乱 | CA 3 | 首句照抄了但后面 I/She 混用，CA 压到 3 |
+| Story 大量时态错但意思可懂 | L 3 | noticeable errors but meaning determined |
+| Story 错误多到分散注意力 | L 2 | 拼写错到影响理解（could→cold、plantes→planes） |
+
 ## 总分换算（单篇 /20 的定性档位）
 
 PET 写作官方换算以两篇合计 40 原始分为基础映射到剑桥量表分，单篇没有官方精确换算表。批改单篇时用下面的定性档位，只写 Grade 等级，不写编造的量表分：
@@ -74,7 +89,9 @@ PET 写作官方换算以两篇合计 40 原始分为基础映射到剑桥量表
 ## 常见考点（PET 学生高频失分）
 
 - 故事题时态不统一（最常考：全篇一般过去时，含不规则动词）
-- 故事题若题目给出首句：必须原样照抄并延续人称，自己改写首句属未按题目要求
+- 故事题若题目给出首句：必须原样照抄并延续人称，自己改写首句属未按题目要求（官方 checklist 明确列为 story 的评分点）
+- article 缺标题：标题是 article 的组织特征之一，没写会损失 Organisation 分（官方 checklist 明确列出）
+- article 缺主题引入：官方样文中没有标准开头句的 article 被压到 CA 3，一句引入就能保住
 - 邮件漏答四要点中的某个
 - 语域：给朋友的邮件过于正式，或文章缺少吸引读者的开头
 - 主谓一致、代词格（Tom and me → Tom and I）

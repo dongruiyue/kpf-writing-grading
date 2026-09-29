@@ -76,7 +76,7 @@ FCE 写作官方换算以两篇合计 40 原始分映射到剑桥量表分（Wri
 ## 常见考点（FCE 学生高频失分）
 
 - essay 结构：缺 conclusion 或自己的观点段落
-- 文体格式：report 缺小标题、letter/email 缺合适的开头结尾套语
+- 文体格式：report 缺小标题、letter/email 缺合适的开头结尾套语、article 缺标题
 - 语域：语气从头到尾一个调，不随读者变化
 - 衔接词使用错误或不自然（如滥用 moreover）
 - 时态复杂度：议论文中条件句（If…, …would）使用错误或回避

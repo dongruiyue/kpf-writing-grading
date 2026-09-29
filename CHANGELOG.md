@@ -81,6 +81,13 @@
 
 ---
 
+## 2026-09-29 · 官方样文校准批次（B1 Preliminary 教师指南 + checklist）
+
+- **C** | 用户提醒「article 应该有标题」 | rubric 没写标题规则 | pet.md CA 5 分档补「article 有标题和主题引入」，常见考点补「缺标题扣 Organisation 分」；fce.md 补 article 缺标题 | 依据：剑桥官方 checklist p.3（B1 Preliminary for Schools writing checklist）
+- **C** | 官方样文锚点入库 | 抽象 band descriptor 不好对照 | pet.md 新增「官方样文锚点」表：8 个真实评过分的样文，含各分项分数和关键判据 | 来源：B1 Preliminary 教师指南样卷 + engxam 样文解析
+
+---
+
 ## 待办观察项
 
 - [ ] 评分松紧共识：攒 20 条「AI 分 vs 老师改后分」记录后做一次分歧率回顾
