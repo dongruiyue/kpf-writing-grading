@@ -339,6 +339,33 @@ def selftest():
         ok = bool([e for e in check_html(bad2) if "小数" in e])
         print(f"  {'✓' if ok else '✗'} HTML 反例 小数小分")
         failed += 0 if ok else 1
+
+        # 跨文件一致性（astra 四审反例）：文本 16/20 通过 vs HTML 11/20 判不过，必须拦
+        import subprocess
+        import tempfile
+        good_fb = _FEEDBACK_BASE.replace("{score_line}", "16/20（C 4 · CA 4 · O 4 · L 4，Grade B 水平）")
+        with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, encoding="utf-8") as f:
+            f.write(good_fb)
+            fb_path = f.name
+        good_html = (html.replace('class="num">11<', 'class="num">16<')
+                         .replace('C 2 · CA 3 · O 3 · L 3', 'C 4 · CA 4 · O 4 · L 4')
+                         .replace('class="band fail">未过字数线，判为不过', 'class="band">Grade B 水平'))
+        with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
+            f.write(good_html)
+            rp_path = f.name
+        r = subprocess.run([sys.executable, str(Path(__file__)), fb_path, rp_path],
+                           capture_output=True, text=True)
+        ok = r.returncode == 0 and "全部通过" in r.stdout
+        print(f"  {'✓' if ok else '✗'} 跨文件一致正例")
+        failed += 0 if ok else 1
+        with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
+            f.write(html)
+            rp_bad_path = f.name
+        r = subprocess.run([sys.executable, str(Path(__file__)), fb_path, rp_bad_path],
+                           capture_output=True, text=True)
+        ok = r.returncode != 0 and "[跨文件]" in r.stdout
+        print(f"  {'✓' if ok else '✗'} 跨文件矛盾反例（16/20 通过 vs 11/20 判不过）")
+        failed += 0 if ok else 1
     print("自检全部通过" if failed == 0 else f"自检 {failed} 项失败")
     sys.exit(1 if failed else 0)
 

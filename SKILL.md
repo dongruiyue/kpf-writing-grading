@@ -158,13 +158,13 @@ python3 <SKILL_ROOT>/scripts/validate-deliverables.py <反馈文本文件>
 
 **交付前必做两步**（模仿歸藏 PPT skill 的「机器卡口 + 视觉核对」）：
 
-1. 跑校验器：
+1. 跑校验器——**两个文件一起传**，才能触发跨文件一致性检查（总分/小分/结论必须一致）：
 
 ```bash
-python3 <SKILL_ROOT>/scripts/validate-deliverables.py <报告.html>
+python3 <SKILL_ROOT>/scripts/validate-deliverables.py <反馈文本文件> <报告.html>
 ```
 
-会抓：必要元素缺失（分区、截图按钮）、禁用内容回流（学生版反馈段、受众标签）、未替换占位符、**残留样板数据**（照抄 assets/report-template.html 后漏改学生姓名/题目，红队问题 #15）。
+会抓：必要元素缺失（分区、截图按钮）、禁用内容回流（学生版反馈段、受众标签）、未替换占位符、**残留样板数据**（照抄 assets/report-template.html 后漏改学生姓名/题目）、分数算术错误（小分 0–5、总分=小分和、档位与分数匹配）、**两交付物矛盾**（结论相反、分数对不上）。
 
 2. 视觉核对（代码存在 ≠ 版式成立）：用 Chrome 无头截图逐段目检，确认无排版错乱、无内容溢出、分数区第一眼可见：
 
@@ -222,6 +222,6 @@ python3 <SKILL_ROOT>/scripts/validate-deliverables.py <报告.html>
 - [ ] 逐句批改覆盖了所有错误，重点问题归纳了 Top 3
 - [ ] 范文是 reachable 版，改动处有标注
 - [ ] 学生版反馈是第 5 步确认格式：五个【】分区齐全、星级体现排序、评语无 AI 腔
-- [ ] 已跑 validate-deliverables.py，学生版反馈和 HTML 报告全部通过
+- [ ] 已跑 validate-deliverables.py（两文件同传触发跨文件检查），学生版反馈和 HTML 报告全部通过
 - [ ] 已主动询问用户是否需要 HTML 报告（不默认生成）
 - [ ] HTML 报告已截图目检，排版无错乱、分数区第一眼可见
