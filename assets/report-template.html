@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>作文批改档案 · 李小雨 · PET article 3月15日</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root {
+    --ink: #1f1e1c;
+    --ink-soft: #55534e;
+    --ink-faint: #8a877f;
+    --line: #e3e1db;
+    --line-strong: #c9c6be;
+    --paper: #ffffff;
+    --wash: #f7f6f3;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 15.5px;
+    line-height: 1.8;
+  }
+  .page { max-width: 860px; margin: 0 auto; padding: 48px 40px 80px; }
+
+  /* 顶部标题区 */
+  .masthead { border-top: 3px solid var(--ink); padding-top: 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+  .masthead .doc-title { font-size: 15px; letter-spacing: 4px; color: var(--ink-faint); }
+  .masthead h1 { font-size: 26px; font-weight: 700; letter-spacing: 1px; margin-top: 6px; }
+  .masthead .meta { font-size: 14px; color: var(--ink-soft); margin-top: 8px; }
+  .scorebox { text-align: right; flex: none; }
+  .scorebox .num { font-size: 44px; font-weight: 800; line-height: 1.1; }
+  .scorebox .num small { font-size: 16px; color: var(--ink-faint); font-weight: 600; }
+  .scorebox .subs { font-size: 13px; color: var(--ink-soft); margin-top: 6px; }
+  .scorebox .band { font-size: 14px; margin-top: 4px; font-weight: 600; }
+  .band.fail { color: #b0483c; }
+
+  /* 通栏提示条 */
+  .notice { border: 1px solid var(--line-strong); border-left: 4px solid #b0483c; padding: 12px 16px; margin-top: 24px; font-size: 14.5px; background: var(--wash); }
+
+  /* 章节 */
+  section { margin-top: 48px; }
+  .sec-label { display: flex; align-items: baseline; gap: 12px; border-bottom: 1px solid var(--ink); padding-bottom: 10px; margin-bottom: 24px; }
+  .sec-label .no { font-size: 13px; color: var(--ink-faint); letter-spacing: 2px; }
+  .sec-label h2 { font-size: 19px; font-weight: 700; letter-spacing: 1px; }
+  .sec-label .tag { margin-left: auto; font-size: 13px; color: var(--ink-faint); }
+
+  .transcript p { margin-bottom: 12px; }
+  .transcript .qn { font-weight: 600; }
+  .muted { color: var(--ink-soft); font-size: 14px; }
+  .statline { font-size: 13.5px; color: var(--ink-faint); margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--line-strong); }
+
+  /* 批改句 */
+  .sent { border: 1px solid var(--line); border-left: 3px solid var(--ink); padding: 16px 18px; margin-bottom: 16px; }
+  .sent .orig { font-size: 15px; margin-bottom: 10px; }
+  .sent .fix { display: grid; grid-template-columns: 64px 1fr; gap: 8px 12px; font-size: 14.5px; }
+  .sent .fix .k { color: var(--ink-faint); font-size: 13px; padding-top: 2px; }
+  .err { border-bottom: 2px solid #b0483c; padding-bottom: 1px; }
+  .ok { color: var(--ink-soft); }
+
+  /* 范文 */
+  .model { border: 1px solid var(--line-strong); padding: 20px 22px; background: var(--wash); }
+  .model p { margin-bottom: 10px; }
+  .model ins { font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--ink); }
+
+  /* 多角度 */
+  .angle { border-top: 1px solid var(--line-strong); padding: 20px 0; }
+  .angle:first-of-type { border-top: none; }
+  .angle h3 { font-size: 15.5px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
+  .angle ul { list-style: none; }
+  .angle ul li { padding: 5px 0 5px 20px; position: relative; }
+  .angle ul li::before { content: "—"; position: absolute; left: 0; color: var(--ink-faint); }
+
+  .shot-btn {
+    position: fixed; right: 24px; bottom: 24px; z-index: 99;
+    background: var(--ink); color: #fff; border: none;
+    font-size: 14.5px; font-family: inherit; letter-spacing: 1px;
+    padding: 12px 22px; cursor: pointer;
+  }
+  .shot-btn:hover { background: #000; }
+  .shot-btn:disabled { opacity: 0.5; cursor: wait; }
+
+  footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-faint); }
+
+  @media (max-width: 720px) {
+    .masthead { flex-direction: column; }
+    .scorebox { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <div>
+      <div class="doc-title">作文批改档案</div>
+      <h1>李小雨 · PET Part 2 article</h1>
+      <div class="meta">FRIENDSHIP 话题 · 2026年3月15日 · 批改人：王老师</div>
+    </div>
+    <div class="scorebox">
+      <div class="num">10<small> / 20</small></div>
+      <div class="subs">C 2 · CA 3 · O 2 · L 3</div>
+      <div class="band fail">未过字数线，判为不过</div>
+    </div>
+  </header>
+
+  <div class="notice">全文 52 词，PET article 词数线为 90 词，不足一半。分数照常评出供参考，但按规则判为不过；分数不构成通过结论。</div>
+
+  <section>
+    <div class="sec-label"><span class="no">01</span><h2>原题</h2><span class="tag">FRIENDSHIP</span></div>
+    <div class="transcript">
+      <p class="qn">Write an article telling us how important it is for friends to have similar characters.</p>
+      <p class="qn">Do you think it's better to have lots of friends or just one best friend? Why?</p>
+      <p class="muted">文体设定：面向杂志读者的 article，最佳文章下月刊登。约 100 词。</p>
+      <div class="statline">题目要点（Content 核对依据）：要点 1，朋友性格相似有多重要，要说明理由；要点 2，朋友多还是一个挚友好，要明确表态并说清为什么。</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="no">02</span><h2>作文原文与转写</h2><span class="tag">下划线为错误处</span></div>
+    <div class="transcript">
+      <p>I think it is very important for friends to have similar <span class="err">characters</span>, because then they can play together <span class="err">happy</span>. I think it is better to have lots of friends, since you can have fun and won't feel lonely. Friends can help you when you have problems. I like my friends very much.</p>
+      <div class="statline">词数 52（要求约 100，词数线 90）· 共 4 句 · 无涂改</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="no">03</span><h2>逐句批改</h2><span class="tag">错误分类 + 改法</span></div>
+
+    <div class="sent">
+      <p class="orig">第 1 句　I think it is very important for friends to have similar characters, because then they can play together happy.</p>
+      <div class="fix">
+        <span class="k">词汇</span><span><span class="err">characters</span> → <b>personalities</b>。说两个人「性格」相似用 personality；character 指品德层面（a person of good character），复数 characters 通常指「角色」。从中文「性格」直译过来最常踩的坑。</span>
+        <span class="k">语法</span><span><span class="err">happy</span> → <b>happily</b>。修饰动词 play 要用副词；happy 是形容词，只能修饰名词。</span>
+      </div>
+    </div>
+
+    <div class="sent">
+      <p class="orig">第 2–4 句　I think it is better to have lots of friends, since you can have fun and won't feel lonely. Friends can help you when you have problems. I like my friends very much.</p>
+      <div class="fix">
+        <span class="k">保留</span><span class="ok">since 带出理由，结构正确；Friends can help you when you have problems 简洁清楚；结尾表达自己的感受，方向对。</span>
+        <span class="k">句式</span><span>三句各有分工，但每句只有一层意思，全文偏短。扩写的方向是给每个理由补一个自己的例子。</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="no">04</span><h2>修改后范文</h2><span class="tag">reachable 版：保留她的句子和观点，只加展开</span></div>
+    <div class="model">
+      <p>I think it is very important for friends to have similar <ins>personalities</ins>, because then they can play together <ins>happily</ins>. I think it is better to have lots of friends, since you can have fun and won't feel lonely. <ins>For example, my friends and I always play basketball after school, and we laugh a lot.</ins> Friends can help you when you have problems. <ins>Last week I forgot my homework and my best friend lent me his notebook.</ins> I like my friends very much. <ins>We are always happy together, and I feel lucky to have them in my life.</ins></p>
+      <p class="muted" style="margin-top:14px">97 词，已过 90 词线。范文示范的是「怎么展开」：原句一个没扔，改动只有三类，两处错误修掉、每个理由补一个例子、结尾加一句感受。原文 52 词到范文 97 词，差的只是细节，不是新本领。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label"><span class="no">05</span><h2>详细评价</h2><span class="tag">评分依据 · 孩子的情况 · 接下来怎么练</span></div>
+
+    <div class="angle">
+      <h3>评分依据（各项为什么给这个分）</h3>
+      <ul>
+        <li>Content 给 2 不给 3：两个要点都答了，但 52 词对 100 词约一半，无任何展开与例证，超出 minor omissions 范围。若按就文论文的宽容口径可到 3，按考试导向口径压到 2，本次取严。</li>
+        <li>Organisation 给 2：全篇仅两句，第二句 since + and this makes 三层堆叠，无分段意识。连接词 because/since 本身用得对，不救结构分。</li>
+        <li>Communicative Achievement 给 3：文体是 article 口吻，观点清晰，但太短撑不起「刊登级」的交际效果。</li>
+        <li>Language 给 3：两处错（characters、happy），错误密度在四句内偏高；控制力挺到 3，够不到 4 的「偶有错误」。</li>
+      </ul>
+    </div>
+
+    <div class="angle">
+      <h3>这篇作文的情况</h3>
+      <ul>
+        <li>孩子的观点、要点、语感都在线，语言准确性在中上。差距在「把一个想法说透」的习惯：话能说对，但说不长、说不细。</li>
+        <li>「性格」的英文（personalities，不是 characters）是这篇作文的关键知识点，也是从中文直译最容易错的词之一，值得陪孩子用英英词典看一次区别。</li>
+        <li>这篇只有 52 词，说明孩子写作时还没有「数词数」的习惯。在家里把「写满 90 词才算完成」立成规矩，比多刷题见效快。</li>
+      </ul>
+    </div>
+
+    <div class="angle">
+      <h3>接下来怎么练</h3>
+      <ul>
+        <li>先把这篇改写到 90 词以上：每问至少两个理由，其中一个配上孩子自己的例子（比如「我和好朋友都喜欢运动」）。写完数一遍词数再交。</li>
+        <li>家长可以配合的一件事：孩子写完后，陪她逐句检查动词时态、一起数词数，坚持一个月。</li>
+        <li>分数怎么看：写作评分允许 ±2 的误差，这次的 10/20 应理解为 8–12 的区间。这次没过是字数没写够，不是能力问题；字数一上来，分数会明显上去。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <span>剑五作文批改工作流 · kpf-writing-grading</span>
+    <span>本档案由 AI 批改生成，经老师复核（模板内学生与内容均为虚构示例）</span>
+  </footer>
+
+</div>
+
+<button class="shot-btn" id="shotBtn" onclick="genImage()">生成图片（发家长）</button>
+<script>
+function genImage() {
+  var btn = document.getElementById('shotBtn');
+  if (typeof html2canvas === 'undefined') {
+    alert('图片组件加载失败（需要联网）。可直接用系统截图，或让批改时同时导出 PNG。');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '正在生成…';
+  html2canvas(document.querySelector('.page'), {
+    backgroundColor: '#ffffff',
+    scale: 2,
+    useCORS: true
+  }).then(function(canvas) {
+    var a = document.createElement('a');
+    a.download = document.title.replace(/[·\s]+/g, '-') + '.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.disabled = false;
+    btn.textContent = '生成图片（发家长）';
+  }).catch(function() {
+    alert('生成失败，请重试或直接用系统截图。');
+    btn.disabled = false;
+    btn.textContent = '生成图片（发家长）';
+  });
+}
+</script>
+</body>
+</html>
