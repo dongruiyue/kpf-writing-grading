@@ -202,25 +202,30 @@ def check_html(text):
 
 
 def _extract_score_info(text, is_html):
-    """从文本反馈或 HTML 报告中提取 (total, subs_tuple, band_text)，用于跨文件一致性比对。"""
+    """从文本反馈或 HTML 报告中提取 (total, subs_tuple, band_text, student_name)，用于跨文件一致性比对。"""
     if is_html:
         num_m = re.search(r'<div class="num">(-?\d+)<small>\s*/\s*(-?\d+)</small></div>', text)
         subs_m = re.search(r'<div class="subs">([^<]+)</div>', text)
         band_m = re.search(r'<div class="band(?:\s+fail)?">([^<]+)</div>', text)
+        name_m = re.search(r"<h1>([^·<]+)", text)
         if not (num_m and subs_m):
             return None
         pairs = re.findall(r"\b(C|CA|O|L)\s*(\d+)\b", subs_m.group(1))
         return (int(num_m.group(1)), tuple((n, int(v)) for n, v in pairs),
-                band_m.group(1) if band_m else "")
+                band_m.group(1) if band_m else "",
+                name_m.group(1).strip() if name_m else "")
     score = re.search(r"【得分与评语】\s*\n?([^\n]*\d+\s*/\s*\d+[^\n]*)", text)
     if not score:
         return None
     line = score.group(1)
     total_m = re.search(r"(-?\d+)\s*/\s*(-?\d+)", line)
     pairs = re.findall(r"\b(C|CA|O|L)\s*(\d+)\b", line)
+    # 学生姓名在【作文反馈】下一行的开头（格式：姓名 + 空格 + 级别题型）
+    name_m = re.search(r"【作文反馈】\s*\n\s*([^\s（(]+)", text)
     if not (total_m and pairs):
         return None
-    return (int(total_m.group(1)), tuple((n, int(v)) for n, v in pairs), line)
+    return (int(total_m.group(1)), tuple((n, int(v)) for n, v in pairs), line,
+            name_m.group(1).strip() if name_m else "")
 
 
 def main():
@@ -252,18 +257,27 @@ def main():
         for e in errs:
             all_errs.append(f"[{p.name}] {e}")
 
-    # 跨文件一致性：同一次批改的两个交付物，总分/小分/结论必须一致
+    # 跨文件一致性：仅当两个文件属于同一学生（同一次批改的两个交付物）时才比对
     if len(score_infos) >= 2:
-        base_name, base_total, base_subs, base_band = score_infos[0]
-        for name, total, subs, band in score_infos[1:]:
-            if total != base_total:
-                all_errs.append(f"[跨文件] 总分不一致：{base_name}={base_total} vs {name}={total}")
-            if subs != base_subs:
-                all_errs.append(f"[跨文件] 小分不一致：{base_name}={base_subs} vs {name}={subs}")
-            base_fail = "判为不过" in base_band or "未过字数线" in base_band
-            this_fail = "判为不过" in band or "未过字数线" in band
-            if base_fail != this_fail:
-                all_errs.append(f"[跨文件] 结论不一致：{base_name}{'判为不过' if base_fail else '正常给档'} vs {name}{'判为不过' if this_fail else '正常给档'}")
+        named = [s for s in score_infos if s[4]]
+        if len(named) >= 2:
+            first_name = named[0][4]
+            if any(s[4] != first_name for s in named[1:]):
+                named = []  # 不同学生，不做跨文件比对
+        else:
+            named = score_infos
+        for i in range(len(named)):
+            for j in range(i + 1, len(named)):
+                a_name, a_total, a_subs, a_band, _ = named[i]
+                b_name, b_total, b_subs, b_band, _ = named[j]
+                if a_total != b_total:
+                    all_errs.append(f"[跨文件] 总分不一致：{a_name}={a_total} vs {b_name}={b_total}")
+                if a_subs != b_subs:
+                    all_errs.append(f"[跨文件] 小分不一致：{a_name}={a_subs} vs {b_name}={b_subs}")
+                a_fail = "判为不过" in a_band or "未过字数线" in a_band
+                b_fail = "判为不过" in b_band or "未过字数线" in b_band
+                if a_fail != b_fail:
+                    all_errs.append(f"[跨文件] 结论不一致：{a_name}{'判为不过' if a_fail else '正常给档'} vs {b_name}{'判为不过' if b_fail else '正常给档'}")
     if all_errs:
         print("未通过：")
         for e in all_errs:
@@ -275,7 +289,7 @@ def main():
 # ── 自检：已知反例回归（GPT6-astra 四轮审查实测构造）───────────
 
 _FEEDBACK_BASE = """【作文反馈】
-测试生 PET article 3月15日
+李小雨 PET article 3月15日
 
 【得分与评语】
 {score_line}
