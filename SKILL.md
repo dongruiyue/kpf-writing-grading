@@ -177,6 +177,9 @@ python3 <SKILL_ROOT>/scripts/validate-deliverables.py <反馈文本文件>
 - 结构性问题（逻辑矛盾、缺落款）按最小改动补，补的内容同样加粗
 - 修改稿前写一行「改 N 处」，老师可逐条核对
 - 修改稿后不写评语，评语已在学生版反馈里
+- **最小改动**：只替换出错的词，不重写学生的短语。整句能靠改一个词读通，就只改那个词（2026-10-23 教训：把 `do your things at first` 整段换成 `do what you enjoy first`，学生原句除 at first 外并没有错）
+- **辨析类不定为错**：at first/first、reasons that/reasons why、which can plan/which helps you plan 这类，只有改变意思或明显不成立才算错，通顺的一律归可选优化，不进修改稿、不计分
+- **交付要全文**：修改稿必须是完整一篇，不许只给改动的那几句。老师拿它逐句批改，节选等于没给
 
 **学生版反馈交付后，默认执行两件事**（无需询问）：
 
