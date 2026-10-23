@@ -251,33 +251,33 @@ def main():
                         errs.append(f"报告残留样板数据「{stale}」——照抄模板后漏改，必须替换为本次内容")
         else:
             errs = check_feedback(text)
-        info = _extract_score_info(text, p.suffix.lower() in (".html", ".htm"))
+        is_html = p.suffix.lower() in (".html", ".htm")
+        info = _extract_score_info(text, is_html)
         if info:
-            score_infos.append((p.name,) + info)
+            score_infos.append((p.name,) + info + (is_html,))
         for e in errs:
             all_errs.append(f"[{p.name}] {e}")
 
-    # 跨文件一致性：仅当两个文件属于同一学生（同一次批改的两个交付物）时才比对
-    if len(score_infos) >= 2:
-        named = [s for s in score_infos if s[4]]
-        if len(named) >= 2:
-            first_name = named[0][4]
-            if any(s[4] != first_name for s in named[1:]):
-                named = []  # 不同学生，不做跨文件比对
-        else:
-            named = score_infos
-        for i in range(len(named)):
-            for j in range(i + 1, len(named)):
-                a_name, a_total, a_subs, a_band, _ = named[i]
-                b_name, b_total, b_subs, b_band, _ = named[j]
-                if a_total != b_total:
-                    all_errs.append(f"[跨文件] 总分不一致：{a_name}={a_total} vs {b_name}={b_total}")
-                if a_subs != b_subs:
-                    all_errs.append(f"[跨文件] 小分不一致：{a_name}={a_subs} vs {b_name}={b_subs}")
-                a_fail = "判为不过" in a_band or "未过字数线" in a_band
-                b_fail = "判为不过" in b_band or "未过字数线" in b_band
-                if a_fail != b_fail:
-                    all_errs.append(f"[跨文件] 结论不一致：{a_name}{'判为不过' if a_fail else '正常给档'} vs {b_name}{'判为不过' if b_fail else '正常给档'}")
+    # 跨文件一致性：只比对「文本反馈 + HTML 报告」这一对交付物。
+    # 两篇文本（同一学生的不同作文）不比对；两篇 HTML 也不比对。
+    pairs_to_check = []
+    texts = [s for s in score_infos if not s[5]]
+    htmls = [s for s in score_infos if s[5]]
+    for t in texts:
+        for h in htmls:
+            pairs_to_check.append((t, h))
+    if pairs_to_check:
+        for a, b in pairs_to_check:
+            a_name, a_total, a_subs, a_band, _, _ = a
+            b_name, b_total, b_subs, b_band, _, _ = b
+            if a_total != b_total:
+                all_errs.append(f"[跨文件] 总分不一致：{a_name}={a_total} vs {b_name}={b_total}")
+            if a_subs != b_subs:
+                all_errs.append(f"[跨文件] 小分不一致：{a_name}={a_subs} vs {b_name}={b_subs}")
+            a_fail = "判为不过" in a_band or "未过字数线" in a_band
+            b_fail = "判为不过" in b_band or "未过字数线" in b_band
+            if a_fail != b_fail:
+                all_errs.append(f"[跨文件] 结论不一致：{a_name}{'判为不过' if a_fail else '正常给档'} vs {b_name}{'判为不过' if b_fail else '正常给档'}")
     if all_errs:
         print("未通过：")
         for e in all_errs:
@@ -379,6 +379,16 @@ def selftest():
                            capture_output=True, text=True)
         ok = r.returncode != 0 and "[跨文件]" in r.stdout
         print(f"  {'✓' if ok else '✗'} 跨文件矛盾反例（16/20 通过 vs 11/20 判不过）")
+        failed += 0 if ok else 1
+        # 同一学生的两篇不同作文（两个文本文件）不应触发跨文件比对
+        other_fb = _FEEDBACK_BASE.replace("{score_line}", "12/20（C 3 · CA 3 · O 3 · L 3，Grade C 水平）")
+        with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, encoding="utf-8") as f2:
+            f2.write(other_fb)
+            fb2_path = f2.name
+        r = subprocess.run([sys.executable, str(Path(__file__)), fb_path, fb2_path],
+                           capture_output=True, text=True)
+        ok = r.returncode == 0
+        print(f"  {'✓' if ok else '✗'} 同学生两篇不同作文不误报跨文件")
         failed += 0 if ok else 1
     print("自检全部通过" if failed == 0 else f"自检 {failed} 项失败")
     sys.exit(1 if failed else 0)
