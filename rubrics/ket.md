@@ -44,6 +44,14 @@ KET 写作每篇按**三项**评分（比 PET/FCE 少一项 Communicative Achiev
 - **Organisation**: 衔接靠 basic high-frequency linking words——注意这指的是 and/but 这类**最高频**连接词，不是高级连接词；有时间标志词和简单代词也算达标
 - **Language**: 使用简单语法结构，some degree of control（能用、对方能懂、但不全对），错误偶尔影响理解
 
+### 格式失当怎么扣（2026-10-23 裁定）
+
+问候语、落款、署名这类**文体惯例**算在 **Communicative Achievement**，不算 Content，也不算 Language。
+
+- letter/email 缺问候语，或结尾缺 Best wishes / 署名：属 conventions 使用失败，**CA 上限 2 分**
+- 缺一样（只缺问候语，或只缺落款）同样按上限 2 处理；两样都缺也是 2，不叠加
+- 题目自带的 Check 清单里写了「opened and closed the letter in a suitable way」，但**不因此转到 Content 扣分**：Content 看的是要点信息是否传递给读者
+
 ### 0/2/4 分档的判定规则
 
 官方量表只有 1/3/5 的完整描述，0/2/4 用插值规则判定：

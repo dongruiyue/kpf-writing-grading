@@ -43,6 +43,15 @@ FCE 写作按**四项**评分，与 PET 相同的四个维度，但标准按 B2 
 - **Organisation**: 整体有组织、连贯（generally well-organised and coherent），使用多种衔接手段（a variety of linking words and cohesive devices）——3 分档已经要求「连贯+多样衔接」，不是「结构可辨认」就行；与 5 分的差距在衔接的自然度和灵活度
 - **Language**: 使用简单和部分复杂语法结构且控制较好（good degree of control，不是成功率中等）；错误存在但不阻碍理解；词汇范围适当（appropriate range of everyday vocabulary）
 
+### 格式失当怎么扣（2026-10-23 裁定）
+
+问候语、落款、署名这类**文体惯例**算在 **Communicative Achievement**，不算 Content，也不算 Language。
+
+- letter/email 缺问候语，或结尾缺 Best wishes / 署名：属 conventions 使用失败，**CA 上限 2 分**
+- 缺一样（只缺问候语，或只缺落款）同样按上限 2 处理；两样都缺也是 2，不叠加
+- 题目自带的 Check 清单里写了「opened and closed the letter in a suitable way」，但**不因此转到 Content 扣分**：Content 看的是要点信息是否传递给读者
+- 同上，report 缺小标题、article 缺标题、review 缺评价维度，一律走 CA
+
 ### 0/2/4 分档的判定规则
 
 官方量表只有 1/3/5 的完整描述，0/2/4 用插值规则判定：
