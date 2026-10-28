@@ -113,7 +113,7 @@ KET 只有三项（Content / Organisation / Language），总分 /15。
 
 **引用原句是硬要求**：每条语言问题都要**原样引用学生写的句子**（不要只写「拼写错误」）。原因有两个：老师能一眼核对（手写识别若有偏差，引用原句就是暴露点），学生也看得懂改的是哪一句。**任何结论都不能建立在单个存疑词上**——转写里标了 `[?]` 或自己不确定的词，不能作为判错的依据（2026-10-15 教训：把 `for hobbies` 误读成 `for teenagers hobbies`，据此判出的「人称不一致」完全不成立）。
 
-- **不得报为问题的三类风格偏好**（2026-10-15 双次误判教训）：语法正确的形容词叠用（different difficult subjects）、平行的动名词结构（rather than letting…与 keep learning 平行）、学生可选择的句式变化，**都不是问题**，不要写进反馈。报语言问题只报两类：① 真错误 ② 明确的搭配问题（如 study faster）。**替代写法不能改变原意**——若「修正」后意思变了（explain different difficult subjects → explain difficult subjects in different ways），那说明原来没错
+- **不得报为问题的三类风格偏好**（2026-10-15 双次误判教训）：语法正确的形容词叠用（different difficult subjects）、平行的动名词结构（rather than letting…与 keep learning 平行）、学生可选择的句式变化；也别把词义用错当成语法错（`cheerful things` 是成立的用法，cheerful 能修饰 colours、music、place、news 这类事物，觉得不自然就归可选，不进错误清单），**都不是问题**，不要写进反馈。报语言问题只报两类：① 真错误 ② 明确的搭配问题（如 study faster）。**替代写法不能改变原意**——若「修正」后意思变了（explain different difficult subjects → explain difficult subjects in different ways），那说明原来没错
 - **不得误判为错误的两类**（2026-10-15 教训）：
   1. **代词指代**：上文有明确先行词时（如 my best friend → She），代词是正确的衔接手段，不能判「指代不清」，也不能要求改成重复名词
   2. **题目原文用语**：学生沿用题目里的词（如 similar characters）不算错
