@@ -13,17 +13,16 @@ import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
-W_LOGICAL = 1080
+W_LOGICAL = 900
 SS = 2
-M = 84
+M = 56
 CONTENT_W = W_LOGICAL - M * 2
 
-PAPER = (250, 249, 246)
-INK = (30, 35, 40)
-MUTED = (110, 106, 99)
-ACCENT = (42, 90, 79)
-RULE = (227, 224, 216)
-TINT = (242, 239, 232)
+PAPER = (252, 251, 248)
+INK = (28, 32, 36)
+MUTED = (108, 104, 97)
+ACCENT = (36, 82, 72)
+RULE = (223, 220, 212)
 
 FONT_PATHS = [
     ("/System/Library/Fonts/Hiragino Sans GB.ttc", 0),
@@ -161,87 +160,84 @@ def star(draw, cx, cy, r, color):
 
 
 def build(d):
-    img = Image.new("RGB", (W_LOGICAL * SS, 4000 * SS), PAPER)
+    img = Image.new("RGB", (W_LOGICAL * SS, 3600 * SS), PAPER)
     draw = ImageDraw.Draw(img)
-    y = [96 * SS]
+    y = [60 * SS]
 
-    def put(text, size, color, bold=False, indent=0, leading=1.55, tracking=0):
+    def text(s, size, color, bold=False, indent=0, leading=1.5):
         f = font(size, bold)
-        if tracking:
-            text = " ".join(list(text))
-        lines = wrap(text, f, (CONTENT_W - indent) * SS)
+        lines = wrap(s, f, (CONTENT_W - indent) * SS)
         lh = int(size * SS * leading)
         for ln in lines:
-            draw.text((M * SS + indent * SS, y[0]), ln, font=f, fill=color)
+            draw.text(((M + indent) * SS, y[0]), ln, font=f, fill=color)
             y[0] += lh
-        return f
+        return len(lines)
 
-    put("作文反馈", 24, MUTED, tracking=1, leading=1.2)
-    y[0] += 34 * SS
-    put(d["name"], 76, INK, bold=True, leading=1.05)
-    y[0] += 12 * SS
+    # 顶部
+    text("作文反馈", 19, MUTED, bold=True, leading=1.2)
+    y[0] += 16 * SS
+
+    fname, fdate = font(34, True), font(19)
+    draw.text((M * SS, y[0]), d["name"], font=fname, fill=INK)
+    if d["date"]:
+        draw.text(((W_LOGICAL - M) * SS - fdate.getlength(d["date"]), y[0] + 14 * SS),
+                  d["date"], font=fdate, fill=MUTED)
+    y[0] += int(34 * SS * 1.35)
     if d["title"]:
-        put(d["title"], 30, MUTED, leading=1.4)
-        y[0] += 6 * SS
-    put(d["date"], 26, MUTED, leading=1.3)
-    y[0] += 46 * SS
+        text(d["title"], 21, MUTED, leading=1.35)
+    y[0] += 12 * SS
 
-    if d["score"]:
-        fscore = font(88, bold=True)
-        draw.text((M * SS, y[0]), d["score"], font=fscore, fill=ACCENT)
-        y[0] += int(88 * SS * 1.05)
-        y[0] += 12 * SS
+    # 分数行
+    fbig, fpart = font(46, True), font(20)
+    draw.text((M * SS, y[0]), d["score"], font=fbig, fill=ACCENT)
+    score_w = fbig.getlength(d["score"])
     if d["parts"]:
-        put(d["parts"], 30, INK, leading=1.3)
-        y[0] += 8 * SS
+        draw.text((M * SS + score_w + 16 * SS, y[0] + 18 * SS), d["parts"], font=fpart, fill=INK)
+    y[0] += int(46 * SS * 1.18)
     if d["band"]:
-        band_color = ACCENT if "判为不过" in d["band"] or "未稳过" in d["band"] else MUTED
-        put(d["band"], 28, band_color, leading=1.3)
-    y[0] += 52 * SS
+        color = ACCENT if ("判为不过" in d["band"] or "未稳过" in d["band"]) else MUTED
+        text(d["band"], 19, color, leading=1.35)
+    y[0] += 20 * SS
 
     draw.line([(M * SS, y[0]), ((W_LOGICAL - M) * SS, y[0])], fill=RULE, width=SS)
-    y[0] += 42 * SS
+    y[0] += 22 * SS
 
+    # 评语
     if d["comment"]:
-        put("\n".join(d["comment"]), 31, INK, leading=1.62)
-    y[0] += 50 * SS
+        text("\n".join(d["comment"]), 25, INK, leading=1.62)
+    y[0] += 22 * SS
 
-    put("写得好的地方", 24, MUTED, tracking=1, leading=1.2)
-    y[0] += 24 * SS
+    # 写得好的地方
+    text("写得好的地方", 20, INK, bold=True, leading=1.2)
+    y[0] += 6 * SS
     for i, g in enumerate(d["goods"], 1):
-        draw.text((M * SS, y[0] + 6 * SS), str(i), font=font(21, bold=True), fill=ACCENT)
-        put(g, 30, INK, indent=44, leading=1.55)
-        y[0] += 18 * SS
-    y[0] += 34 * SS
+        draw.text((M * SS, y[0] + 2 * SS), f"{i}", font=font(19, True), fill=ACCENT)
+        text(g, 25, INK, indent=26, leading=1.55)
+        y[0] += 8 * SS
+    y[0] += 18 * SS
 
-    put("需要修改的地方", 24, MUTED, tracking=1, leading=1.2)
-    y[0] += 24 * SS
+    # 需要修改的地方
+    text("需要修改的地方", 20, INK, bold=True, leading=1.2)
+    y[0] += 6 * SS
     for item in d["fixes"]:
         body, stars = split_importance(item)
-        put(body, 30, INK, indent=20, leading=1.55)
         if stars:
-            y[0] += 12 * SS
             for k in range(stars):
-                star(draw, (M + 32 + k * 34) * SS, y[0] + 11 * SS, 11 * SS, ACCENT)
-            y[0] += 34 * SS
-        y[0] += 24 * SS
-    y[0] += 24 * SS
+                cx, cy = (M + 7 + k * 13) * SS, y[0] + 12 * SS
+                draw.ellipse([cx - 3.4 * SS, cy - 3.4 * SS, cx + 3.4 * SS, cy + 3.4 * SS], fill=ACCENT)
+        text(body, 25, INK, indent=46, leading=1.55)
+        y[0] += 9 * SS
+    y[0] += 14 * SS
 
-    put("下一步练习", 24, MUTED, tracking=1, leading=1.2)
-    y[0] += 22 * SS
-    fnext = font(29)
-    lines = wrap(" ".join(d["next"]), fnext, (CONTENT_W - 64) * SS)
-    lh = int(29 * SS * 1.55)
-    box_h = lh * len(lines) + 44 * SS
-    draw.rounded_rectangle([M * SS, y[0] - 14 * SS, (W_LOGICAL - M) * SS, y[0] - 14 * SS + box_h],
-                           radius=16 * SS, fill=TINT)
-    ty = y[0] + 8 * SS
-    for ln in lines:
-        draw.text(((M + 32) * SS, ty), ln, font=fnext, fill=INK)
-        ty += lh
-    y[0] = y[0] - 14 * SS + box_h + 60 * SS
+    # 下一步练习
+    draw.line([(M * SS, y[0]), ((W_LOGICAL - M) * SS, y[0])], fill=RULE, width=SS)
+    y[0] += 18 * SS
+    text("下一步练习", 20, INK, bold=True, leading=1.2)
+    y[0] += 6 * SS
+    text(" ".join(d["next"]), 25, INK, leading=1.6)
+    y[0] += 44 * SS
 
-    h = max(int(y[0]), 640 * SS)
+    h = max(int(y[0]), 520 * SS)
     out = img.crop((0, 0, W_LOGICAL * SS, h)).resize((W_LOGICAL, h // SS), Image.LANCZOS)
     return out
 
