@@ -38,6 +38,19 @@ KET 写作每篇按**三项**评分（比 PET/FCE 少一项 Communicative Achiev
 - **Organisation**: 行文连贯且衔接手段到位（connected and coherent, using basic linking words and a limited number of cohesive devices）。注意评分口径比想象中宽：连接词、邮件格式（称呼+结尾套语）、时间标志词、代词使用**都算 Organisation**；但**有称呼结尾不自动保证 5 分**——格式是必要条件之一，还要连贯和衔接证据
 - **Language**: **允许有明显错误，只要意思可判明**（errors may be noticeable but meaning can still be determined）——不是「少量错误」也不是「零错误」。判断锚点：「She is eating a sandwich.」是 5 分控制力；「She eating a sandwich.」是 3 分；**单个句子不能决定整篇档位**，看全文整体控制水平
 
+### 故事题的 Content 判分锚点（2026-11-11 老师裁定）
+
+看图写故事按「三幅图的关键信息是否都让读者被告知」判 Content，不看句子多少：
+
+| 情形 | Content |
+|---|---|
+| 三幅图关键信息都在，读者不用脑补 | 5 |
+| 三幅图都在，但有一幅只写了个开头（如只写到了、没写结果） | 3–4 |
+| 一幅图关键信息缺失、另一幅只剩地点或动作，读者要靠猜才连得上 | **2** |
+| 只写到一幅图，其余靠一句带过 | 1 |
+
+典型例子（学生G）：海报有了，第二幅只写 arrived at the cinema 而没写影院关门，第三幅只写 watched a film on TV 而没写在家里、没写爆米花，判 Content 2。
+
 ### 3 分档的典型特征
 
 - **Content**: 覆盖大部分内容点，允许 minor irrelevances / omissions（轻微跑题或个别遗漏），但整体读者能看懂全部信息
